@@ -1,4 +1,15 @@
-:{$PORT}
-
-root * /srv
-file_server
+:80 {
+    encode brotli gzip
+    
+    reverse_proxy {
+        to cf-vs-vercel-vs-railway-bench-co.railway.internal:80 \
+           cf-vs-vercel-vs-railway-bench-co-5642d225.railway.internal:80 \
+           cf-vs-vercel-vs-railway-bench.railway.internal:80
+        
+        lb_policy round_robin
+        
+        health_uri /
+        health_interval 10s
+        health_timeout 5s
+    }
+}
